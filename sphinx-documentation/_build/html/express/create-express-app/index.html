@@ -1,0 +1,214 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Create an Express App &#8212; dws 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Routing" href="../routing/index.html" />
+    <link rel="prev" title="Express" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p><a class="reference internal" href="../../index.html"><span class="doc">Home</span></a> | <a class="reference internal" href="../index.html"><span class="doc">Express</span></a></p>
+<div class="section" id="create-an-express-app">
+<h1>Create an Express App<a class="headerlink" href="#create-an-express-app" title="Permalink to this headline">¶</a></h1>
+<p>With <cite>npm</cite> and <cite>node</cite> installed on your computer you can create a minimal <cite>express</cite> app like this:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">my</span><span class="o">-</span><span class="n">app</span>
+<span class="n">cd</span> <span class="n">my</span><span class="o">-</span><span class="n">app</span>
+<span class="n">npm</span> <span class="n">init</span> <span class="o">-</span><span class="n">y</span>
+<span class="n">npm</span> <span class="n">install</span> <span class="n">express</span>
+</pre></div>
+</div>
+<p>Use a text editor, such as <cite>Vim</cite>, to create a file called <cite>app.js</cite> in the root of the project (that means directly inside the my-app directory). Put the following contents in <cite>app.js</cite>:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">express</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+
+<span class="n">const</span> <span class="n">app</span> <span class="o">=</span> <span class="n">express</span><span class="p">();</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/example&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+
+   <span class="n">res</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">);</span>
+
+<span class="p">});</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now run the app from your terminal with the command <code class="docutils literal"><span class="pre">node</span> <span class="pre">app.js</span></code>. Open a browser window and navigate to <cite>www.localhost:3000/example</cite>. You should see ‘Hello World!</p>
+<div class="section" id="app-method-path-handler">
+<h2>app.Method(PATH, HANDLER)<a class="headerlink" href="#app-method-path-handler" title="Permalink to this headline">¶</a></h2>
+<p>In the app we created we use the <cite>get</cite> method of the <cite>app</cite> object. This means that if an http get request is made to the value for PATH (in this case /example) then the function supplied as the HANDLER argument will be called. In this case the function returns an http response with ‘Hello World!’ in the body to the browser. This is achieved with the res.send() method.</p>
+<p>The function we use as a handler contains the arguments req and res which are abbreviations of <cite>request</cite> and <cite>response</cite>. These objects are created by express when handling an http request and preparing the response.</p>
+</div>
+<div class="section" id="use-a-variable-in-handler">
+<h2>Use a variable in HANDLER<a class="headerlink" href="#use-a-variable-in-handler" title="Permalink to this headline">¶</a></h2>
+<p>The HANDLER function is where the response to a request is built. It can make database queries or get data from APIs. It can transform the data using the javascript language. We used res.send() to send a response directly from the HANDLER to the browser. Very often res.render() is used. This passes data to an HTML template which then displays the data within the template and it is this that is sent as HTML in the http response.</p>
+<p>As a very simple example of elaborating the HANDLER function we can introduce some javascript code with variables in it to our simple express app:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">express</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+
+<span class="n">const</span> <span class="n">app</span> <span class="o">=</span> <span class="n">express</span><span class="p">();</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/example&#39;</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">let</span> <span class="n">firstName</span> <span class="o">=</span> <span class="s1">&#39;Brian&#39;</span>
+  <span class="n">let</span> <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;Hello &#39;</span>
+  <span class="n">output</span> <span class="o">+=</span> <span class="n">firstName</span>
+  <span class="n">res</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="p">});</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="chaining-with-next">
+<h2>Chaining with next()<a class="headerlink" href="#chaining-with-next" title="Permalink to this headline">¶</a></h2>
+<p>It may be inconvenient for all the code required to process an http request to be inside one HANDLER function. In the example below the pattern is app.METHOD(PATH, HANDLER_1, HANDLER_2, HANDLER_3, HANDLER_4) where each HANDLER is a seperate function. The term next refers to the next function in the chain. So the first function has next as one of its arguments and this refers to the argument coming after it. The argument is used as the last statement in each function ensuring that the next function is indeed called.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span>const express = require(&#39;express&#39;)
+const app = express()
+const port =3000
+
+app.get(&#39;/example&#39;,
+  function (req, res, next) { ... next() },
+  function (req, res, next) { ... next() },
+  function (req, res, next) { ... next() },
+  function (req, res, next) {
+    res.send(&#39;Hello&#39;)
+  }
+)
+
+app.listen(port, () =&gt; console.log(`app listening on port ${port}`))
+</pre></div>
+</div>
+<p>In the code below we assign variables to the Request object in each of the middleware functions and display them to the browser in the final function in the chain. Note that the final function has been given ‘next‘ as one of its arguments even though it does not need it because it is the last argument.</p>
+<p>So, we can now encapsulate different functionality into different middleware functions and still have the results from them available to send to the browser at the end of the middleware chain. An example of several database queries is shown below:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span>const express = require(&#39;express&#39;)
+const app = express()
+const port =3000
+
+app.get(&#39;/example&#39;,
+  function (req, res, next) {
+    let query1 = &#39;one &#39;
+    req.query1 = query1
+    next()
+  },
+  function (req, res, next) {
+    let query2 = &#39;two &#39;
+    req.query2 = query2
+    next()
+  },
+  function (req, res, next) {
+    let query3 = &#39;three&#39;
+    req.query3 = query3
+    next()
+  },
+  function (req, res, next) {
+    res.send(&#39;Hello &#39; + req.query1 + req.query2 + req.query3)
+  }
+)
+
+app.listen(port, () =&gt; console.log(`app listening on port ${port}`))
+</pre></div>
+</div>
+<p>We could have saved some typing by assigning the values directly to the Request object like this:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span>const express = require(&#39;express&#39;)
+const app = express()
+const port =3000
+
+app.get(&#39;/example&#39;,
+  function (req, res, next) {
+    req.query1 = &#39;one &#39;
+    next()
+  },
+  function (req, res, next) {
+    req.query2 = &#39;two &#39;
+    next()
+  },
+  function (req, res, next) {
+    req.query3 = &#39;three &#39;
+    next() },
+  function (req, res, next) {
+    res.send(&#39;Hello &#39; + req.query1 + req.query2 + req.query3)
+  }
+)
+
+app.listen(port, () =&gt; console.log(`listening on port ${port}`))
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Express</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Express</a></li>
+      <li>Next: <a href="../routing/index.html" title="next chapter">Routing</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Stephen Greig.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/express/create-express-app/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

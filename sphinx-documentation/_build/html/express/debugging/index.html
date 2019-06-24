@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Debugging &#8212; dws 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Routing" href="../routing/index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p><a class="reference internal" href="../../index.html"><span class="doc">Home</span></a> | <span class="xref std std-doc">Express</span></p>
+<div class="section" id="debugging">
+<h1>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="console-log">
+<h2>console.log()<a class="headerlink" href="#console-log" title="Permalink to this headline">¶</a></h2>
+<p>It can be very helpful to display data from your programs in the console. We may not know what sort of data structure a query result is. One way to find out is to include a <code class="docutils literal"><span class="pre">console.log()</span></code> statement in our code. This will be logged to the console when we refresh the browser. Here we use <code class="docutils literal"><span class="pre">console.log(row)</span></code> to clarify the result from a database query.</p>
+<p>We can make a database query using the <cite>sqlite3</cite> module’s .get() method. We have named our database object <cite>db</cite> so the query is made with the statement <code class="docutils literal"><span class="pre">db.get(sql,</span> <span class="pre">(err,</span> <span class="pre">row)</span> <span class="pre">=&gt;</span> <span class="pre">{</span> <span class="pre">console.log(row)</span> <span class="pre">});</span></code>. The <cite>sql</cite> variable contains the actual <cite>SQL</cite> code we want to run.</p>
+<p>Th <cite>db.get()</cite> method takes a callback function. In this case the function just has one statement which sends the <cite>row</cite> argument to the console where we can inspect it. The <cite>db.get</cite> method invokes the callback after it has queried the database. It supplies two arguments. These are err, and row. We could call them anything but the method intends the first argument to represent any error encountered while attempting to make the database query. If there was not an error this argument will be be assigned the <cite>null</cite> value. The second argument is for the result of a successful database query. We have called it <cite>row</cite>.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span>const express = require(&#39;express&#39;)
+const app = express()
+const sqlite3 = require(&#39;sqlite3&#39;).verbose()
+const port =3000
+
+let db = new sqlite3.Database(&#39;music.db&#39;)
+
+app.get(&#39;/example&#39;, function (req, res, next) {
+  let sql = `SELECT * FROM musicians`
+  db.get(sql, (err, row) =&gt; {
+    console.log(row)
+  })
+    let output = &#39;His name is &#39;
+    output += row.firsName + row.lastName + &#39;!&#39;
+    res.send(output)
+})
+
+app.listen(port, () =&gt; console.log(`app listening on port ${port}`))
+</pre></div>
+</div>
+<p>When this is run the output to the browser is the same but in the console we see:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">Example</span> <span class="n">app</span> <span class="n">listening</span> <span class="n">on</span> <span class="n">port</span> <span class="mi">3000</span>
+<span class="p">{</span> <span class="nb">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">firstName</span><span class="p">:</span> <span class="s1">&#39;Brian&#39;</span><span class="p">,</span> <span class="n">lastName</span><span class="p">:</span> <span class="s1">&#39;Eno&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Now we can see <cite>row</cite> in the console it becomes obvious that it is an object. Also we can see the structure of the object. This will make it much easier to use the object correctly as we develop the code to use the data object in our <cite>HANDLER</cite> function.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Express</a><ul>
+      <li>Previous: <a href="../routing/index.html" title="previous chapter">Routing</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Stephen Greig.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/express/debugging/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
