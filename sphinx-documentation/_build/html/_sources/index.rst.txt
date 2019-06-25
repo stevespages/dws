@@ -9,6 +9,7 @@ Dev with Steve Home Page
 .. toctree::
    :maxdepth: 1
 
+   ./linux/index
    ./node/index
    ./express/index
    ./vim/index
